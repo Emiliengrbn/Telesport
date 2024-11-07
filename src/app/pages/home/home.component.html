@@ -1,0 +1,25 @@
+<!-- <section> -->
+<h1 class="title">Medals per Country</h1>
+<div class="numbers">
+    <div class="number-jos">
+        <p>Number of JOs</p>
+        <span>10</span>
+    </div>
+    <div class="number-countries">
+        <p>Number of countries</p>
+        <span>10</span>
+    </div>
+</div>
+<div>
+    <canvas baseChart
+        [type]="'pie'"
+        [datasets]="pieChartDatasets"
+        [labels]="pieChartLabels"
+        [options]="pieChartOptions"
+        [plugins]="pieChartPlugins"
+        [legend]="pieChartLegend">
+    </canvas>
+
+</div>
+<p>{{ (olympics$ | async)?.length }} data loaded</p>
+<!-- </section> -->
