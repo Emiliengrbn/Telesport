@@ -6,17 +6,12 @@
     </div>
     <div class="number-countries">
         <p>Number of countries</p>
-        <span>{{ (olympics$ | async)?.length}}</span>
+        <span>{{ this.olympics.length}}</span>
     </div>
 </div>
 <div class="chartSection">
-    <canvas baseChart
-        [type]="pieChartType"
-        [datasets]="pieChartData"
-        [labels]="pieChartLabels"
-        [options]="pieChartOptions"
-        [plugins]="pieChartPlugins"
-        [legend]="pieChartLegend">
+    <canvas baseChart [type]="pieChartType" [datasets]="pieChartData" [labels]="pieChartLabels"
+        [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
     </canvas>
 
 </div>

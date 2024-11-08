@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import { OlympicCountry } from '../models/Olympic';
 
 @Injectable({
@@ -13,6 +13,7 @@ export class OlympicService {
 
   constructor(private http: HttpClient) {}
 
+  // Chargement initial des données avec gestion d'erreur
   loadInitialData() {
     return this.http.get<OlympicCountry[]>(this.olympicUrl).pipe(
       tap((value) => this.olympics$.next(value)),
@@ -24,16 +25,22 @@ export class OlympicService {
     );
   }
 
+  // Méthode pour obtenir l'observable des données
   getOlympics() {
     return this.olympics$.asObservable();
   }
 
-  // getCountryById(CountryId: string): OlympicCountry {
-  //   const foundCountry = this.loadInitialData.find(FaceSnap => FaceSnap.id === FaceSnapId)
-  //   if(!foundCountry) {
-  //     throw new Error('FaceSnap not found!')
-  //   }
+  // Méthode pour obtenir les données sous forme de tableau (avec gestion de l'asynchronisme)
+  async getOlympicsData(): Promise<OlympicCountry[] | null> {
+    // Si les données sont déjà présentes dans le BehaviorSubject, les retourner immédiatement
+    if (this.olympics$.value !== undefined) {
+      return this.olympics$.value;
+    }
 
-  //   return foundCountry
-  // }
+    // Sinon, attendre que les données soient chargées
+    await this.loadInitialData().toPromise();
+
+    return this.olympics$.value;
+  }
+  
 }
