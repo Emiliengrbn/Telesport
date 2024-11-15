@@ -13,16 +13,22 @@
 
 .numbers {
     display: flex;
+    justify-content: center;
     gap: 50px;
-    width: max-content;
     margin: auto;
     margin-top: 50px;
+    flex-wrap: wrap;
 
     div {
         border: #04838F 2px solid;
         border-radius: 15px;
         padding: 5px 15px;
         font-size: 20px;
+        width: 230px;
+
+        p {
+            text-align: center;
+        }
 
         span {
             display: block;
@@ -36,6 +42,11 @@
     display: flex;
     justify-content: center;
     margin-top: 50px;
+    width: 100%;
+}
+canvas {
+    width: 700px !important;
+    height: 300px !important;
 }
 
 footer button {
@@ -50,4 +61,15 @@ footer button {
     margin: auto;
     margin-top: 80px;
     cursor: pointer;
+}
+
+@media all and (max-width: 768px) {
+    canvas {
+        width: 95% !important;
+        height: 200px !important;
+    }
+
+    .numbers {
+        gap: 25px;
+    }
 }

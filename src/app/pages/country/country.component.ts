@@ -21,28 +21,17 @@ export class CountryComponent implements OnInit {
   
 
   public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July'
-    ],
-    datasets: [
-      {
-        data: [ 65, 59, 80, 81, 56, 55, 40 ],
-        label: 'Series A',
-        fill: true,
-        tension: 0.5,
-        borderColor: 'black',
-        backgroundColor: 'rgba(255,0,0,0.3)'
-      }
-    ]
+    labels: [],
+    datasets: [{data: []}]
   };
   public lineChartOptions: ChartOptions<'line'> = {
-    responsive: false
+    responsive: false,
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        enabled: false
+      }
+    }
   };
   public lineChartLegend = false;
 
@@ -50,6 +39,7 @@ export class CountryComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadOlympics()
+    
   }
 
   async loadOlympics() {
@@ -57,12 +47,10 @@ export class CountryComponent implements OnInit {
       this.olympics = await this.olympicService.getOlympicsData();
 
       if (this.olympics) {
-        console.log(this.olympics);
         
         this.selectedCountry = this.foundCountry(this.olympics);
-        console.log(this.selectedCountry);
+        this.chartData()
         
-    this.chartData()
       }
     } catch (error) {
       console.error('Error loading olympics data', error);
@@ -77,9 +65,30 @@ export class CountryComponent implements OnInit {
 
   chartData() {
       this.medalsCount = this.selectedCountry?.participations.reduce((total, participation) => total + participation.medalsCount, 0)
-      console.log(this.medalsCount);
       this.athletesCount = this.selectedCountry?.participations.reduce((total, participation) => total + participation.athleteCount, 0);
-      console.log(this.athletesCount);
+
+      const labels = this.selectedCountry?.participations.map(participation => participation.year.toString()) || [];
+      const data = this.selectedCountry?.participations.map(participation => participation.medalsCount) || [];
+
+      labels.unshift('');
+      labels.push('');
+
+      data.unshift(NaN);
+      data.push();
+
+      this.lineChartData = {
+        labels,
+        datasets: [
+          {
+            data,
+            label: 'Medals Count',
+            fill: false,
+            tension: 0,
+            borderColor: '#04838F',
+            backgroundColor: 'rgba(0,0,0,0)'
+          }
+        ]
+      };
   }
 
   backHome() {
