@@ -25,11 +25,6 @@ export class OlympicService {
     );
   }
 
-  // Méthode pour obtenir l'observable des données
-  getOlympics() {
-    return this.olympics$.asObservable();
-  }
-
   // Méthode pour obtenir les données sous forme de tableau (avec gestion de l'asynchronisme)
   async getOlympicsData(): Promise<OlympicCountry[] | null> {
     // Si les données sont déjà présentes dans le BehaviorSubject, les retourner immédiatement

@@ -1,20 +1,25 @@
 <h1 class="title">{{this.selectedCountry?.country}}</h1>
 <div class="numbers">
-    <div class="number-jos">
-        <p>Number of JOs</p>
-        <span>10</span>
+    <div class="number-entries">
+        <p>Number of entries</p>
+        <span>{{this.selectedCountry?.participations?.length}}</span>
     </div>
     <div class="number-countries">
-        <p>Number of countries</p>
+        <p>Total number medals</p>
+        <span>{{this.medalsCount}}</span>
+    </div>
+    <div class="number-countries">
+        <p>Total number of athletes</p>
+        <span>{{this.athletesCount}}</span>
     </div>
 </div>
 <div class="chartSection">
-    <!-- <canvas baseChart width="400" height="400"
-        [type]="'line'"
-        [data]="lineChartData"
-        [options]="lineChartOptions"
+    <canvas baseChart width="400" height="400" [type]="'line'" [data]="lineChartData" [options]="lineChartOptions"
         [legend]="lineChartLegend">
-  </canvas> -->
-
+    </canvas>
 
 </div>
+
+<footer>
+    <button (click)="backHome()">Back Home</button>
+</footer>

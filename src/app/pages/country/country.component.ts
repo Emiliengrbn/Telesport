@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { ChartConfiguration, ChartDataset, ChartOptions, ChartType } from 'chart.js';
 import { Observable, of, Subscription } from 'rxjs';
 import { OlympicCountry } from 'src/app/core/models/Olympic';
@@ -10,10 +10,13 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './country.component.html',
   styleUrls: ['./country.component.scss']
 })
-export class CountryComponent implements OnInit, OnDestroy {
-  public olympics$: Observable<any> = of(null);
+export class CountryComponent implements OnInit {
+  // public olympics$: Observable<any> = of(null);
+  olympics: any = []
+  public selectedCountry: OlympicCountry | null = null;
+  public medalsCount!: any;
+  public athletesCount!: any;
   private subscription: Subscription | null = null;
-  public selectedCountry: OlympicCountry | null = null;  // Ajoutez une variable pour stocker le pays trouvé
   
   
 
@@ -41,18 +44,30 @@ export class CountryComponent implements OnInit, OnDestroy {
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: false
   };
-  public lineChartLegend = true;
+  public lineChartLegend = false;
 
-  constructor(private olympicService: OlympicService, private route: ActivatedRoute) {}
+  constructor(private olympicService: OlympicService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.olympicService.loadInitialData().subscribe();
-    this.olympics$ = this.olympicService.getOlympics();
+    this.loadOlympics()
+  }
 
-    this.subscription = this.olympics$.subscribe(data => {
-      this.selectedCountry = this.foundCountry(data);
-      console.log("Pays trouvé :", this.selectedCountry);
-    });
+  async loadOlympics() {
+    try {
+      this.olympics = await this.olympicService.getOlympicsData();
+
+      if (this.olympics) {
+        console.log(this.olympics);
+        
+        this.selectedCountry = this.foundCountry(this.olympics);
+        console.log(this.selectedCountry);
+        
+    this.chartData()
+      }
+    } catch (error) {
+      console.error('Error loading olympics data', error);
+    }
+    
   }
 
   foundCountry(data: OlympicCountry[]): OlympicCountry | null {
@@ -60,12 +75,22 @@ export class CountryComponent implements OnInit, OnDestroy {
     return data.find(country => country.id === countryId) || null;
   }
 
-  ngOnDestroy(): void {
-    // Nettoyez les données lorsque le composant est détruit
-    this.selectedCountry = null;  // Supprime la référence au pays sélectionné
-    if (this.subscription) {
-      this.subscription.unsubscribe();  // Annule l'abonnement pour éviter les fuites de mémoire
-    }
-    console.log("Pays sélectionné réinitialisé à null");
+  chartData() {
+      this.medalsCount = this.selectedCountry?.participations.reduce((total, participation) => total + participation.medalsCount, 0)
+      console.log(this.medalsCount);
+      this.athletesCount = this.selectedCountry?.participations.reduce((total, participation) => total + participation.athleteCount, 0);
+      console.log(this.athletesCount);
   }
+
+  backHome() {
+    this.router.navigate([`/`])
+  }
+
+  // ngOnDestroy(): void {
+  //   // this.selectedCountry = null;
+  //   // if (this.olympics) {
+  //   //   this.olympics = null
+  //   // }
+  //   console.log("Pays sélectionné réinitialisé à null");
+  // }
 }
