@@ -10,13 +10,13 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
+    path: 'country/:id',
+    component: CountryComponent
+  },
+  {
     path: '**',
     component: NotFoundComponent,
   },
-  {
-    path: 'country/:id',
-    component: CountryComponent
-  }
 ];
 
 @NgModule({
