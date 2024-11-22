@@ -49,8 +49,10 @@ export class CountryComponent implements OnInit {
       if (this.olympics) {
         
         this.selectedCountry = this.foundCountry(this.olympics);
+        if (!this.selectedCountry) {
+          this.router.navigate([`/**`])
+        }
         this.chartData()
-        
       }
     } catch (error) {
       console.error('Error loading olympics data', error);
